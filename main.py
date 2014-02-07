@@ -1,7 +1,8 @@
 # APOCALYPSE JIM
 # By Adam Binks
+# 01/02/14
 
-import pygame, sys, my, mob, player, level
+import pygame, my, mob, player, level, input
 from pygame.locals import *
 
 pygame.init()
@@ -15,31 +16,22 @@ pygame.display.update()
 
 def main():
     """Handle menu position"""
-	runGame()
+    my.input = input.Input()
+    runGame()
 
 
 def runGame():
     """Run the actual game loop"""
-    testMap = Level.Map('mapPack.txt')
-    my.screen.blit(testMap.surf, (0,0))
-    pygame.display.update()
-    pygame.time.wait(2000)
+    my.map = level.Map('mapPack.txt')
+    testPlayer = player.Player()
 
-
-def checkForQuit():
-    """Terminate if QUIT events or K_ESCAPE"""
-    for event in pygame.event.get(QUIT): # get all the QUIT events
-        terminate() # terminate if any QUIT events are present
-    for event in pygame.event.get(KEYUP): # get all the KEYUP events
-        if event.key == K_ESCAPE:
-            terminate() # terminate if the KEYUP event was for the Esc key
-        pygame.event.post(event) # put the other KEYUP event objects back
-
-
-def terminate():
-    """Safely end the program"""
-    pygame.quit()
-    sys.exit()
+    while True: # MAIN GAME LOOP
+        my.input.get()
+        my.screen.blit(my.map.surf, (0,0))
+        testPlayer.update()
+        pygame.display.update()
+        my.FPSCLOCK.tick(my.FPS)
+        my.input.checkForQuit()
 
 
 
