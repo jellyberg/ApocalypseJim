@@ -25,10 +25,10 @@ class BasicSprite(pygame.sprite.Sprite):
                         flippedAnim = self.flipAnimation(anim)
                         flippedName = originalAnimName + 'L'
                         self.animations[flippedName] = flippedAnim
-                        print('yes')
         # PICK FIRST IMAGE FROM A RANDOM ANIMATION TO GENERATE SELF.RECT
         self.surf = self.animations[random.choice(list(self.animations.keys()))][0]
         self.rect = self.surf.get_rect()
+        self.gameRect = self.rect.copy()
 
 
     def loadAnimationFiles(self, directory, file):
@@ -69,7 +69,25 @@ class BasicSprite(pygame.sprite.Sprite):
 
     def blit(self):
         """Blit to screen. Duh."""
-        my.screen.blit(self.surf, self.rect)
+        my.masterSurf.blit(self.surf, self.gameRect)
+
+
+    def getMapArea(self):
+        """Returns a list of map coords that the given rect overlaps"""
+        rect = self.gameRect
+        mapArea = []
+        topLeftx, topLefty = self.pixelsToMap(rect.topleft)
+        bottomRightx, bottomRighty = self.pixelsToMap(rect.bottomright)
+        for x in range(topLeftx, bottomRightx):
+            for y in range(topLefty, bottomRighty):
+                mapArea.append([x, y])
+        return mapArea
+
+
+    def pixelsToMap(self, pixels):
+        """Returns map coords when given my.masterSurf pixel coords"""
+        x, y = pixels
+        return int(x / my.CELLSIZE), int(y / my.CELLSIZE) 
 
 
 
@@ -89,7 +107,8 @@ class GravSprite(BasicSprite):
 
 
     def updatePos(self):
-        """Updates the sprite's rect (x and y) based on its self.isOnGround and self.move"""
+        """Updates the sprite's gameRect (x and y) based on its self.isOnGround and self.move"""
+        self.isOnGround = self.getIsOnGround()
         # --Y VELOCITY--
         # FALL OR SLOW JUMPING IF IN THE AIR
         if not self.isOnGround:
@@ -111,7 +130,17 @@ class GravSprite(BasicSprite):
             self.dir = 'right'
         else: num = 0
         self.xVel += num
-        self.rect.right += self.xVel
+        self.gameRect.right += self.xVel
+
+
+    def getIsOnGround(self):
+        x, y = 0, 1
+        area = self.getMapArea()
+        for coord in area:
+            if coord[y + 1] > my.map.yCellNum or my.map.isSolid(coord[x], coord[y + 1]):
+                return True
+        return False
+        
 
 
 

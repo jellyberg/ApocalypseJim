@@ -6,7 +6,7 @@ animNameList  = ['run'                  ]
 filenameList  = ['jimRun'               ]
 directoryList = ['assets\player\jimRun']
 
-moveSpeed = 1
+moveSpeed = 3
 jumpForce = 5
 
 class Player(mob.GravSprite):

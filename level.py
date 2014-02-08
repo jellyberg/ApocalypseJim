@@ -13,6 +13,8 @@ class Map:
 		self.mapNum = random.randint(0, len(self.allData) - 1)
 		self.map = self.allData[self.mapNum]
 		self.genSurf()
+		self.width = self.surf.get_width()
+		self.xCellNum, self.yCellNum = len(self.map), len(self.map[0])
 
 
 	def genDataStructure(self, strList):
@@ -48,6 +50,20 @@ class Map:
 
 
 
+class Camera:
+	"""Allows for a scrolling game view, and camera shake."""
+	def __init__(self):
+		self.gameRect = pygame.Rect(0, 0, my.WINDOWWIDTH, my.WINDOWHEIGHT)
+		self.gameRect.centerx = my.player.gameRect.centerx
+		self.width = my.WINDOWWIDTH
+		self.shake = 0
+
+	def update(self):
+		"""Updates camera pos and shake, and blits the to my.screen"""
+		self.gameRect.centerx = my.player.gameRect.centerx
+		if self.gameRect.left < 0: self.gameRect.left = 0
+		elif self.gameRect.right > my.map.width: self.gameRect.right = my.map.width
+		my.screen.blit(my.masterSurf, (0,0), self.gameRect)
 
 
 def readLevelFiles(filename):
@@ -80,11 +96,7 @@ def readLevelFiles(filename):
 	
 def main():
 	"""For quick testing purposes"""
-	testMap = Map('mapPack.txt')
-	print('Level num: ' + str(testMap.mapNum + 1))
-	my.screen.blit(testMap.surf, (0, 0))
-	pygame.display.update()
-	pygame.time.wait(1000)
+	pass
 
 if __name__ == '__main__':
     main()

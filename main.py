@@ -16,6 +16,7 @@ pygame.display.update()
 
 def main():
     """Handle menu position"""
+    my.screen.fill(my.RED)
     my.input = input.Input()
     runGame()
 
@@ -23,12 +24,15 @@ def main():
 def runGame():
     """Run the actual game loop"""
     my.map = level.Map('mapPack.txt')
-    testPlayer = player.Player()
+    my.player = player.Player()
+    my.camera = level.Camera()
+    my.masterSurf = my.map.surf.copy()
 
     while True: # MAIN GAME LOOP
         my.input.get()
-        my.screen.blit(my.map.surf, (0,0))
-        testPlayer.update()
+        my.masterSurf.blit(my.map.surf, (0,0))
+        my.player.update()
+        my.camera.update()
         pygame.display.update()
         my.FPSCLOCK.tick(my.FPS)
         my.input.checkForQuit()

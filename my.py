@@ -6,6 +6,8 @@ FPS = 60
 FPSCLOCK = pygame.time.Clock()
 WINDOWWIDTH = 1280
 WINDOWHEIGHT = 480
+HALFWINDOWWIDTH = int(WINDOWWIDTH / 2)
+HALFWINDOWHEIGHT = int(WINDOWHEIGHT / 2)
 screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
 # Colours     R    G    B  ALPHA
